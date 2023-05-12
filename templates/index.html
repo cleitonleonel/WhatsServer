@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <title>WhatsServer</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="shortcut icon" href="https://web.whatsapp.com/img/favicon/1x/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" sizes="194x194" href="https://web.whatsapp.com/apple-touch-icon.png" type="image/png">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" id="style" href="/css/qrcode.css">
+</head>
+<style>
+  #notifications {
+    cursor: pointer;
+    position: fixed;
+    padding-top: 10px;
+    right: 0px;
+    z-index: 9999;
+    /*bottom: 0px;*/
+    margin-bottom: 22px;
+    margin-right: 15px;
+    max-width: 300px;
+  }
+</style>
+<body>
+<div id="notifications"></div>
+<div id="app">
+  <div class="app-wrapper app-wrapper-web">
+    <div id="wrapper">
+      <div id="window">
+        <div class="entry-main">
+          <div class="qrcode">
+            <img alt="Leia o QRCODE" id="base64" style="display: block;" src="/img/qr-start.png">
+          </div>
+          <div class="entry-text" style="text-align: center;">
+            <div class="entry-title">WhatsServer</div>
+            <div class="entry-subtitle" id="desc_info">Use o WhatsApp no seu telefone para ler o qrcode.
+            </div>
+            <div class="entry-controls" id="action_button">
+              <label>
+                <button type="button" class="btn btn-success" data-toggle="modal"
+                        data-target="#form_modal"> Conectar nova sessão
+                </button>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="form_modal" tabindex="-1" role="dialog" aria-labelledby="form_modal_label"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="form_modal_label">Iniciar uma nova sessão</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="session_name" class="col-form-label">Nome da Sessão:</label>
+              <input type="text" title="Digite o nome da sessão" class="form-control" id="session_name"
+                     value="">
+            </div>
+            <div class="form-group">
+              <label for="session_key" class="col-form-label">Chave da sessão:</label>
+              <input type="text" title="Digite o nome da sessão" class="form-control" id="session_key"
+                     value="teste">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Fechar</button>
+          <button type="button" id="buttonStart" class="btn btn-success">Start</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="sendtext_modal" tabindex="-1" role="dialog" aria-labelledby="form_modal_label"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="sendtext_modal_label">Enviar mensagens</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="session_name" class="col-form-label">Número:</label>
+              <input type="text" title="Digite o nome da sessão" class="form-control" id="number"
+                     value="">
+            </div>
+            <div class="form-group">
+              <label for="session_key" class="col-form-label">Mensagem:</label>
+              <input type="text" title="Digite o nome da sessão" class="form-control" id="message"
+                     value="teste">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Fechar</button>
+          <button type="button" onclick="send_text()" id="send_message" class="btn btn-success">Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.socket.io/4.3.2/socket.io.min.js" integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs" crossorigin="anonymous"></script>
+<script src="/js/controllers/notify.js"></script>
+<script>
+  const server = window.location.protocol + "//" + window.location.host
+
+  $(document).ready(() => {
+    const api_token = `998162442`
+    const wh_connect = ``
+    const wh_message = ``
+    const wh_status = ``
+    const wh_qrcode = ``
+
+    try {
+      var socket = io(`${server}`, {
+        withCredentials: false,
+      });
+    } catch (error) {
+      console.log('API Desconectada!!!')
+    }
+
+    $(`#buttonStart`).on(`click`, async () => {
+      $('#form_modal').modal('hide');
+      await request_api('start')
+    })
+
+    async function request_api(action) {
+      let session = document.getElementById('session_name').value;
+      let session_key = document.getElementById('session_key').value;
+      let URL = `${server}/${action}`
+
+      socket.on(`whatsapp-status`, (status) => {
+        if (status) {
+          document.getElementById('buttonStart').disabled = true
+          $(`#base64`).LoadingOverlay("hide");
+          document.getElementById('base64').src = "/img/ok.jpg"
+          document.getElementById("desc_info").innerHTML = "Teste nosso envio de mensagens clicando no botão abaixo...";
+          $('#action_button').html('<button type="button" class="btn btn-success" data-toggle="modal" data-target="#sendtext_modal"> Testar</button>');
+        } else {
+          document.getElementById('buttonStart').disabled = false
+          document.getElementById('base64').src = "/img/error.jpg"
+        }
+        try {
+          console.log(status);
+        } catch (error) {
+          console.log('API Desconectada!!!')
+        }
+      })
+
+      socket.on('qrCode', (qrCode) => {
+        console.log(qrCode);
+        console.log(qrCode.session, session)
+        if (qrCode.session == session) {
+          $(`#base64`).attr(`src`, qrCode?.data);
+          $(`#base64`).LoadingOverlay("hide");
+        }
+      })
+
+      socket.on('message', function (msg) {
+        $('.logs').prepend($('<li>').text(msg));
+      });
+
+      socket.on('ready', function (data) {
+        $(`#base64`).LoadingOverlay("hide");
+        document.getElementById('base64').src = "/img/ok.jpg"
+      });
+
+      socket.on('authenticated', function (data) {
+        $(`#base64`).LoadingOverlay("hide");
+        document.getElementById('base64').src = "/img/ok.jpg"
+      });
+
+      switch (action) {
+        case `start`:
+          await $.post({
+            url: `${URL}`,
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apitoken': `${api_token ?? ''}`,
+              'sessionkey': `${session_key ?? ''}`
+            },
+            data: JSON.stringify({
+              session: session ?? '',
+              wh_connect: wh_connect ?? '',
+              wh_message: wh_message ?? '',
+              wh_status: wh_status ?? '',
+              wh_qrcode: wh_qrcode ?? '',
+            }),
+            beforeSend: function (data, xhr) {
+              $(`#base64`).LoadingOverlay("show");
+            },
+            success: function (data) {
+              if (data.status === "CONNECTED") {
+                document.getElementById('buttonStart').disabled = true;
+                $(`#base64`).LoadingOverlay("hide");
+                notification('Whatsapp Aberto com sucesso!!!', null, null, 'success');
+                document.getElementById('base64').src = "/img/ok.jpg"
+                document.getElementById("desc_info").innerHTML = "Teste nosso envio de mensagens clicando no botão abaixo...";
+                $('#action_button').html('<button type="button" class="btn btn-success" data-toggle="modal" data-target="#sendtext_modal"> Testar</button>');
+              }
+            },
+            error: function (error) {
+              $(`#base64`).LoadingOverlay("hide");
+            },
+          })
+          break;
+
+        default:
+          console.log('requisição inválida.');
+          break;
+      }
+    }
+
+  });
+
+  function send_text() {
+    let session_key = document.getElementById('session_key').value;
+    let session = document.getElementById('session_name').value;
+    let number = document.getElementById('number').value;
+    let message = document.getElementById('message').value;
+    $.post({
+      url: `${server}/api/v1/sendtext`,
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'sessionkey': `${session_key ?? ''}`},
+      data: JSON.stringify({
+        session: session ?? '',
+        number: number ?? '',
+        text: message ?? '',
+      }),
+      beforeSend: function (data, xhr) {
+        notification('Enviando mensagem, aguarde...', null, null, 'warning');
+      },
+      success: function (data) {
+        $('#sendtext_modal').modal('hide');
+        notification('Mensagem enviada com sucesso!!!', null, null, 'success');
+      },
+      error: function (error) {
+        notification('Tente novamente em instantes... \n' + JSON.stringify(error.message), null, null, 'warning');
+        $('#sendtext_modal').modal('hide');
+        document.getElementById("number").focus();
+      },
+    })
+  }
+
+  function notification(text, callback, close_callback, style) {
+    Notify(text, callback, close_callback, style);
+  }
+</script>

@@ -1,0 +1,8 @@
+app
+app.prg
+make.sh
+compact.sh
+run.sh
+.dockerignore
+Dockerfile
+node_modules
