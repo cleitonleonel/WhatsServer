@@ -7,6 +7,9 @@ const qrcode = require('qrcode');
 const multer = require('multer');
 const {Client, LocalAuth, MessageMedia, Location} = require('whatsapp-web.js');
 const {Server} = require("socket.io");
+const exec = require("child_process");
+const os = require("os");
+
 require('dotenv').config();
 let client;
 
@@ -14,6 +17,35 @@ let client;
 const HOST = process.env.HOST || '0.0.0.0';
 const PORT = process.env.PORT || 3000;
 const PROFILES = process.env.PROFILES || '.whats_profiles';
+
+function execute(command){
+  let version = exec.execSync(command);
+  return version.toString();
+}
+
+function update_last_version(engine, sector){
+  let local_version = execute(`npm list -l --depth=0 | awk -F@ '/${engine.split("/")[0]}/ { print $${sector}}'`);
+  let remote_version = execute(`npm show ${engine} version`);
+  console.log(`ENGINE: ${engine} VERSÃO_LOCAL: ${local_version} VERSÃO_REMOTA: ${remote_version}`)
+  if (parseInt(local_version.split('\n')[0].split('.').join('')) < parseInt(remote_version.split('\n')[0].split('.').join(''))) {
+    console.log('VERSÃO DESATUALIZADA.');
+    console.log('ATUALIZANDO VERSÃO PARA ' + execute(`npm show ${engine} version`).split('\n')[0]);
+    execute(`npm install ${engine}@${remote_version}`);
+  }else{
+    console.log('JÁ ESTÁ COM A ÚLTIMA VERSÃO.');
+  }
+}
+
+let platform = os.platform();
+
+if (platform === 'linux') {
+  console.log("you are on a Linux os");
+  update_last_version("whatsapp-web.js", 2);
+}else if(platform === 'win32'){
+  console.log("you are on a Windows os")
+}else{
+  console.log("unknown os")
+}
 
 // Express app setup
 const app = express();

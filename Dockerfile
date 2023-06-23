@@ -54,8 +54,6 @@ COPY . .
 
 RUN npm install
 
-RUN mv Injected.js node_modules/whatsapp-web.js/src/util/
-
 VOLUME /.profiles
 
 EXPOSE 3333
