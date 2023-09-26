@@ -21,11 +21,19 @@ PROCEDURE Main()
    @ 3,10 SAY "Escolha o tipo de mensagem (1 - Texto, 2 - Arquivo, 3 - Upload): " GET nChoice
    read
 
+   cPayload := hb_jsonEncode( { "session" => rtrim( cSession ) } )
+   cResult := CheckSession( cUrlBase + "check", cPayload )
+   oResult := hb_jsonDecode( cResult )
+   IF ! oResult["response"] == .T.
+      alert( "NENHUMA SESSÃO ENCONTRADA PARA: " + cSession )
+      Return
+   ENDIF
+
    IF nChoice == 1
       @ 4,10 SAY "Digite a mensagem: " GET cText
       read
       cUrl := cUrlBase + "sendtext"
-      cJson := { "session" => rtrim( cSession ), "number" => rtrim( cNumber ), "text" => rtrim( hb_StrToUTF8( cText ) ) }
+      cJson := { "session" => rtrim( cSession ), "number" => "55" + rtrim( cNumber ), "text" => rtrim( hb_StrToUTF8( cText ) ) }
       cPayload := hb_jsonEncode( cJson )
       cResult := SendMessage( cUrl, cPayload )
    ELSEIF nChoice == 2
@@ -33,7 +41,7 @@ PROCEDURE Main()
       @ 5,10 SAY "Digite o assunto referente o arquivo a ser enviado: " GET cCaption
       read
       cUrl := cUrlBase + "sendfile"
-      cJson := { "session" => rtrim( cSession ), "number" => rtrim( cNumber ), "path" => rtrim( cFilePath ), "caption" => rtrim( hb_StrToUTF8( cCaption ) )}
+      cJson := { "session" => rtrim( cSession ), "number" => "55" + rtrim( cNumber ), "path" => rtrim( cFilePath ), "caption" => rtrim( hb_StrToUTF8( cCaption ) )}
       cPayload := hb_jsonEncode( cJson )
       cResult := SendMessage( cUrl, cPayload)
    ELSEIF nChoice == 3
@@ -41,7 +49,7 @@ PROCEDURE Main()
       @ 7,10 SAY "Digite o assunto referente o arquivo a ser enviado: " GET cCaption
       read
       cUrl := cUrlBase + "upload"
-      cJson := { "session" => rtrim( cSession ), "number" => rtrim( cNumber ), "file" => rtrim( cFilePath ), "caption" => rtrim( hb_StrToUTF8( cCaption ) )}
+      cJson := { "session" => rtrim( cSession ), "number" => "55" + rtrim( cNumber ), "file" => rtrim( cFilePath ), "caption" => rtrim( hb_StrToUTF8( cCaption ) )}
       cPayload := hb_jsonEncode( cJson )
       cResult := SendMessageUpload( cUrl, cPayload)
    ELSE
@@ -61,6 +69,34 @@ PROCEDURE Main()
    ENDIF
 
 Return
+
+
+FUNCTION CheckSession(cLink, cPayload)
+   Local curl, cErr, http_code := 0, cResponse
+   curl_global_init()
+   IF ! Empty( curl := curl_easy_init() )
+      curl_easy_reset( curl )
+      curl_easy_setopt( curl, HB_CURLOPT_USERAGENT, 'Mozilla/5.0 (MSIE; Windows 10)' )
+      curl_easy_setopt( curl, HB_CURLOPT_CONNECTTIMEOUT, 0 )
+      curl_easy_setopt( curl, HB_CURLOPT_TIMEOUT, 5 )
+      curl_easy_setopt( curl, HB_CURLOPT_HTTPHEADER, {"Content-Type: application/json"} )
+      curl_easy_setopt( curl, HB_CURLOPT_POST, .T. )
+      curl_easy_setopt( curl, HB_CURLOPT_POSTFIELDS, cPayload )
+      curl_easy_setopt( curl, HB_CURLOPT_URL, cLink)
+      curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, .F. )
+      curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_SETUP )
+      curl_easy_perform( curl )
+      http_code := curl_easy_getinfo( curl, HB_CURLINFO_RESPONSE_CODE )
+      IF http_code == 200
+         cResponse := curl_easy_dl_buff_get( curl )
+         RETURN cResponse
+      ELSE
+         alert( "Erro na chamada da API: HTTP ", http_code )
+      ENDIF
+   ENDIF
+   curl_global_cleanup()
+
+Return ""
 
 
 FUNCTION SendMessage(cLink, cPayload)
@@ -93,7 +129,7 @@ Return ""
 
 Function SendMessageUpload(cLink, cPayload)
     Local curl, cErr, http_code := 0, cResponse, aHeaders, curlErr, boundary
-    cFormBody = BoundaryMake(cPayload, boundary := '----' + hb_StrToHex ( hb_TtoC( hb_DateTime(), 'YYYYMMDDhhmmssfff' ) ) )
+    cFormBody := BoundaryMake(cPayload, boundary := '----' + hb_StrToHex ( hb_TtoC( hb_DateTime(), 'YYYYMMDDhhmmssfff' ) ) )
     curl_global_init()
     IF ! Empty( curl := curl_easy_init() )
         curl_easy_reset( curl )

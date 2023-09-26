@@ -15,7 +15,7 @@
     cursor: pointer;
     position: fixed;
     padding-top: 10px;
-    right: 0px;
+    right: 0;
     z-index: 9999;
     /*bottom: 0px;*/
     margin-bottom: 22px;
@@ -39,8 +39,7 @@
             </div>
             <div class="entry-controls" id="action_button">
               <label>
-                <button type="button" class="btn btn-success" data-toggle="modal"
-                        data-target="#form_modal"> Conectar nova sessão
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form_modal"> Conectar nova sessão
                 </button>
               </label>
             </div>
@@ -49,10 +48,9 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="form_modal" tabindex="-1" role="dialog" aria-labelledby="form_modal_label"
-       aria-hidden="true">
+  <div class="modal fade" id="form_modal" tabindex="-1" role="dialog" aria-labelledby="form_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
+      <div class="modal-content" style="height: 300px;">
         <div class="modal-header">
           <h5 class="modal-title" id="form_modal_label">Iniciar uma nova sessão</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -63,14 +61,13 @@
           <form>
             <div class="form-group">
               <label for="session_name" class="col-form-label">Nome da Sessão:</label>
-              <input type="text" title="Digite o nome da sessão" class="form-control" id="session_name"
-                     value="">
+              <input type="text" title="Digite o nome da sessão" class="form-control" id="session_name" value="">
             </div>
-            <div class="form-group">
+            <!--<div class="form-group">
               <label for="session_key" class="col-form-label">Chave da sessão:</label>
               <input type="text" title="Digite o nome da sessão" class="form-control" id="session_key"
                      value="teste">
-            </div>
+            </div>-->
           </form>
         </div>
         <div class="modal-footer">
@@ -94,13 +91,11 @@
           <form>
             <div class="form-group">
               <label for="session_name" class="col-form-label">Número:</label>
-              <input type="text" title="Digite o nome da sessão" class="form-control" id="number"
-                     value="">
+              <input type="text" title="Digite o nome da sessão" class="form-control" id="number" value="">
             </div>
             <div class="form-group">
-              <label for="session_key" class="col-form-label">Mensagem:</label>
-              <input type="text" title="Digite o nome da sessão" class="form-control" id="message"
-                     value="teste">
+              <label for="message" class="col-form-label">Mensagem:</label>
+              <input type="text" title="Digite o nome da sessão" class="form-control" id="message" value="teste">
             </div>
           </form>
         </div>
@@ -123,16 +118,17 @@
 <script src="/js/controllers/notify.js"></script>
 <script>
   const server = window.location.protocol + "//" + window.location.host
+  let socket;
 
   $(document).ready(() => {
-    const api_token = `998162442`
+    const api_token = ``
     const wh_connect = ``
     const wh_message = ``
     const wh_status = ``
     const wh_qrcode = ``
 
     try {
-      var socket = io(`${server}`, {
+      socket = io(`${server}`, {
         withCredentials: false,
       });
     } catch (error) {
@@ -146,8 +142,8 @@
 
     async function request_api(action) {
       let session = document.getElementById('session_name').value;
-      let session_key = document.getElementById('session_key').value;
-      let URL = `${server}/${action}`
+      //let session_key = document.getElementById('session_key').value;
+      let URL = `${server}/api/v1/${action}`
 
       socket.on(`whatsapp-status`, (status) => {
         if (status) {
@@ -170,7 +166,7 @@
       socket.on('qrCode', (qrCode) => {
         console.log(qrCode);
         console.log(qrCode.session, session)
-        if (qrCode.session == session) {
+        if (qrCode.session === session) {
           $(`#base64`).attr(`src`, qrCode?.data);
           $(`#base64`).LoadingOverlay("hide");
         }
@@ -198,7 +194,7 @@
             headers: {
               'Content-Type': 'application/json',
               'apitoken': `${api_token ?? ''}`,
-              'sessionkey': `${session_key ?? ''}`
+              //'sessionkey': `${session_key ?? ''}`
             },
             data: JSON.stringify({
               session: session ?? '',
@@ -235,17 +231,18 @@
   });
 
   function send_text() {
-    let session_key = document.getElementById('session_key').value;
+    //let session_key = document.getElementById('session_key').value;
     let session = document.getElementById('session_name').value;
     let number = document.getElementById('number').value;
     let message = document.getElementById('message').value;
     $.post({
       url: `${server}/api/v1/sendtext`,
       method: 'POST',
-      headers: {'Content-Type': 'application/json', 'sessionkey': `${session_key ?? ''}`},
+      //headers: {'Content-Type': 'application/json', 'sessionkey': `${session_key ?? ''}`},
+      headers: {'Content-Type': 'application/json'},
       data: JSON.stringify({
         session: session ?? '',
-        number: number ?? '',
+        number: `55${number}` ?? '',
         text: message ?? '',
       }),
       beforeSend: function (data, xhr) {
