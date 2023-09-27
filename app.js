@@ -11,12 +11,12 @@ const manager = require('./controllers/managerControllers');
 const platform = os.platform();
 
 if (platform === 'linux') {
-  console.log("you are on a Linux os");
+  console.log("You are on a Linux OS\n");
   manager.updateVersion("whatsapp-web.js", 2);
 }else if(platform === 'win32'){
-  console.log("you are on a Windows os");
+  console.log("You are on a Windows OS\n");
 }else{
-  console.log("unknown os");
+  console.log("Unknown os");
 }
 
 // Configuration

@@ -1,5 +1,6 @@
-sudo apt update
-sudo apt install nodejs -y
-sudo apt install npm -y
-
+apt update -y
+apt upgrade -y
+apt install -y nvm
+nvm install --lts
+nvm install-latest-npm
 npm install

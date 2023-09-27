@@ -20,7 +20,6 @@ class WhatsappWebJS {
         console.log(`****** STARTING SESSION ${session} ******`)
         client = new Client({
           restartOnAuthFail: true,
-          deviceName:"WhatsServer",
           takeoverOnConflict: useHere,
           authStrategy: new LocalAuth({
             dataPath: `${PROFILES}/${session}`
@@ -29,27 +28,28 @@ class WhatsappWebJS {
             headless: true,
             handleSIGINT: false,
             args: [
-              '--disable-web-security',
-              '--no-sandbox',
-              '--disable-web-security',
-              '--aggressive-cache-discard',
-              '--disable-cache',
-              '--disable-application-cache',
-              '--disable-offline-load-stale-cache',
-              '--disk-cache-size=0',
-              '--disable-background-networking',
-              '--disable-default-apps',
-              '--disable-extensions',
-              '--disable-sync',
-              '--disable-translate',
-              '--hide-scrollbars',
-              '--metrics-recording-only',
-              '--mute-audio',
-              '--no-first-run',
-              '--safebrowsing-disable-auto-update',
-              '--ignore-certificate-errors',
-              '--ignore-ssl-errors',
-              '--ignore-certificate-errors-spki-list',
+            '--disable-web-security',
+            '--no-sandbox',
+            '--disable-web-security',
+            '--aggressive-cache-discard',
+            '--disable-cache',
+            '--disable-application-cache',
+            '--disable-offline-load-stale-cache',
+            '--disk-cache-size=0',
+            '--disable-background-networking',
+            '--disable-default-apps',
+            '--disable-extensions',
+            '--disable-sync',
+            '--disable-translate',
+            '--hide-scrollbars',
+            '--metrics-recording-only',
+            '--mute-audio',
+            '--no-first-run',
+            '--safebrowsing-disable-auto-update',
+            '--ignore-certificate-errors',
+            '--ignore-ssl-errors',
+            '--ignore-certificate-errors-spki-list',
+            '--disable-features=LeakyPeeker',
             ],
           },
         });
@@ -115,8 +115,8 @@ class WhatsappWebJS {
         });
 
         client.on('message', async message => {
-          console.log(message.body);
-          req.io.emit('message', message.body);
+          //console.log(message.body);
+          //req.io.emit('message', message.body);
         });
 
       } catch (error) {
