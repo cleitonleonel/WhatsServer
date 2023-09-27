@@ -177,13 +177,15 @@
       });
 
       socket.on('ready', function (data) {
-        $(`#base64`).LoadingOverlay("hide");
-        document.getElementById('base64').src = "/img/ok.jpg"
+        document.getElementById('buttonStart').disabled = true;
       });
 
       socket.on('authenticated', function (data) {
         $(`#base64`).LoadingOverlay("hide");
         document.getElementById('base64').src = "/img/ok.jpg"
+        document.getElementById("desc_info").innerHTML = "Teste nosso envio de mensagens clicando no botão abaixo...";
+        $('#action_button').html('<button type="button" class="btn btn-success" data-toggle="modal" data-target="#sendtext_modal"> Testar</button>');
+        notification('Whatsapp Aberto com sucesso!!!', null, null, 'success');
       });
 
       switch (action) {
@@ -214,6 +216,8 @@
                 document.getElementById('base64').src = "/img/ok.jpg"
                 document.getElementById("desc_info").innerHTML = "Teste nosso envio de mensagens clicando no botão abaixo...";
                 $('#action_button').html('<button type="button" class="btn btn-success" data-toggle="modal" data-target="#sendtext_modal"> Testar</button>');
+              } else if (data.status === "QRCODE") {
+                notification('Aguardando leitura de Qrcode', null, null, 'warning');
               }
             },
             error: function (error) {
