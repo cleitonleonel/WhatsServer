@@ -1,4 +1,4 @@
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const {Client, LocalAuth} = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const qrcodeBase64 = require('qrcode');
 const Sessions = require('../controllers/sessionsControllers');
@@ -9,12 +9,12 @@ class WhatsappWebJS {
     return new Promise(async (resolve, reject) => {
       try {
         let client;
-        let useHere = true;
+        let useHere = false;
         if (useHere) {
-          useHere = false
+          useHere = false;
         } else {
           if (!useHere) {
-            useHere = true
+            useHere = true;
           }
         }
         console.log(`****** STARTING SESSION ${session} ******`)
@@ -28,28 +28,29 @@ class WhatsappWebJS {
             headless: true,
             handleSIGINT: false,
             args: [
-            '--disable-web-security',
-            '--no-sandbox',
-            '--disable-web-security',
-            '--aggressive-cache-discard',
-            '--disable-cache',
-            '--disable-application-cache',
-            '--disable-offline-load-stale-cache',
-            '--disk-cache-size=0',
-            '--disable-background-networking',
-            '--disable-default-apps',
-            '--disable-extensions',
-            '--disable-sync',
-            '--disable-translate',
-            '--hide-scrollbars',
-            '--metrics-recording-only',
-            '--mute-audio',
-            '--no-first-run',
-            '--safebrowsing-disable-auto-update',
-            '--ignore-certificate-errors',
-            '--ignore-ssl-errors',
-            '--ignore-certificate-errors-spki-list',
-            '--disable-features=LeakyPeeker',
+              '--disable-web-security',
+              '--no-sandbox',
+              '--disable-web-security',
+              '--aggressive-cache-discard',
+              '--disable-cache',
+              '--disable-application-cache',
+              '--disable-offline-load-stale-cache',
+              '--disk-cache-size=0',
+              '--disable-background-networking',
+              '--disable-default-apps',
+              '--disable-extensions',
+              '--disable-sync',
+              '--disable-translate',
+              '--hide-scrollbars',
+              '--metrics-recording-only',
+              '--mute-audio',
+              '--no-first-run',
+              '--safebrowsing-disable-auto-update',
+              '--ignore-certificate-errors',
+              '--ignore-ssl-errors',
+              '--ignore-certificate-errors-spki-list',
+              '--disable-features=LeakyPeeker',
+              '--disable-setuid-sandbox'
             ],
           },
         });
@@ -99,7 +100,7 @@ class WhatsappWebJS {
         });
 
         client.on('change_battery', (batteryInfo) => {
-          const { battery, plugged } = batteryInfo;
+          const {battery, plugged} = batteryInfo;
           console.log(`Battery: ${battery}% - Charging? ${plugged}`);
         });
 

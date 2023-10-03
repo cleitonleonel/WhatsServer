@@ -23,7 +23,9 @@ module.exports = {
 
     if (sessionExists) {
       const sessionData = Sessions.getSession(session);
-      if (sessionData) {
+      if (sessionData.status === 'QRCODE' || sessionData.status === 'READY') {
+          await init(session);
+      } else if (sessionData) {
         return res.status(400).json({
           result: 400,
           status: "FAIL",
@@ -59,6 +61,23 @@ module.exports = {
           response: 'Unable to activate session.'
         });
       }
+    }
+  },
+
+  closeSession: async  (req, res) => {
+    let {session} = req.body.session;
+    let data = Sessions.getSession(session);
+    try {
+      await data.client.close();
+      res.status(200).json({
+        status: true,
+        message: "Sessão Fechada com sucesso"
+      });
+    } catch (error) {
+      res.status(400).json({
+        status: false,
+        message: "Error ao fechar sessão", error
+      });
     }
   },
 
