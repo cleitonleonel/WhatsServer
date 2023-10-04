@@ -3,6 +3,14 @@ const router = express.Router();
 const multer = require('multer');
 const controllers = require('../controllers/messagesControllers');
 const validators = require('../validators/paramValidators');
+const fs = require('fs');
+const path = require('path');
+const upload_dir = path.resolve(__dirname, '../uploads');
+
+if (!fs.existsSync(upload_dir)) {
+  fs.mkdirSync(upload_dir, { recursive: true });
+  fs.chmodSync(upload_dir, 0o777);
+}
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

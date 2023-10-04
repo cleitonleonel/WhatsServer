@@ -74,6 +74,9 @@ su - "$username" -c 'bash -l -c "source ~/.nvm/nvm.sh && npm -v"'
 su - "$username" -c 'bash -l -c "source ~/.nvm/nvm.sh && npm install -g npm@latest"'
 su - "$username" -c 'bash -l -c "source ~/.nvm/nvm.sh && cd WhatsServer && npm install"'
 
+sudo chown "$username:$username" -R "/home/$username"
+sudo chmod -R 755 "/home/$username"
+
 echo "Instalação concluída com sucesso!!!"
 
 su - "$username"
