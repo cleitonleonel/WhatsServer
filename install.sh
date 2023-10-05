@@ -29,11 +29,11 @@ if (( $(echo "$os_version < 20.04" | bc -l) )); then
   node_version="16.15.1"
 fi
 
-echo "OLHA A VERS\u00c3O DO SISTEMA: ${os_version}"
-echo "OLHA A VERS\u00c3O DO NODE: ${node_version}"
+echo "OLHA A VERSÃO DO SISTEMA: ${os_version}"
+echo "OLHA A VERSÃO DO NODE: ${node_version}"
 echo "OLHA O BASENAME: ${base_name}"
 
-echo 'Criando usu\u00e1rio'
+echo 'Criando usuário'
 if [ $(id -u) -eq 0 ]; then
         grep "$username" /etc/passwd >/dev/null
         if [ $? -eq 0 ]; then
@@ -41,18 +41,17 @@ if [ $(id -u) -eq 0 ]; then
         else
                 sudo adduser --gecos "" --disabled-password "$username"
                 echo "$username:$password" | sudo chpasswd
-                [ $? -eq 0 ] && echo "Usu\u00e1rio adicionado ao sistema!" || echo "Falha ao adicionar usu\u00e1rio!"
+                [ $? -eq 0 ] && echo "Usuário adicionado ao sistema!" || echo "Falha ao adicionar usuário!"
         fi
 else
-        echo "Apenas o root pode adicionar um usu\u00e1rio ao sistema"
+        echo "Apenas o root pode adicionar um usuário ao sistema"
         exit 2
 fi
 
-echo 'Adicionando usu\u00e1rio ao sudoers'
+echo 'Adicionando usuário ao sudoers'
 sudo sh -c "echo '$username    ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers"
 
-
-echo "Dando permiss\u00f5es ao usu\u00e1rio $username"
+echo "Dando permissões ao usuário $username"
 sudo chown "$username:$username" -R "/home/$username"
 sudo chmod -R 755 "/home/$username"
 
@@ -76,7 +75,7 @@ export NVM_DIR="$HOME/.nvm"
 
 EOF
 
-su - "$username" -c "bash -l -c 'export node_version=\"$node_version\" && echo USU\u00c1RIO: \$USER && echo PATH: \$PWD && echo NODE_VERSION: \$node_version && source ~/.bashrc'"
+su - "$username" -c "bash -l -c 'export node_version=\"$node_version\" && echo USUÁRIO: \$USER && echo PATH: \$PWD && echo NODE_VERSION: \$node_version && source ~/.bashrc'"
 su - "$username" -c "bash -l -c 'source ~/.nvm/nvm.sh && export PATH=\"\$PATH:/usr/bin:/bin:/usr/local/bin\" && source ~/.bashrc && export node_version=\"$node_version\" && nvm install \"\$node_version\"'"
 # su - "$username" -c 'bash -l -c "source ~/.nvm/nvm.sh && nvm install $node_version"'
 # su - "$username" -c "bash -l -c 'source ~/.nvm/nvm.sh && echo \"$(node -v | sed \"s/v//\")\" > ~/WhatsServer/.nvmrc'"
@@ -112,6 +111,6 @@ sudo chown "$username:$username" -R "/home/$username"
 sudo chmod -R 755 "/home/$username"
 sudo chmod -R 777 "/home/$username/WhatsServer"
 
-echo "Instala\u00e7\u00e3o conclu\u00edda com sucesso!!!"
+echo "Instalação concluída com sucesso!!!"
 
 su - "$username"
