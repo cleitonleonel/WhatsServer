@@ -69,10 +69,15 @@ class Sessions {
   }
 
   // deletar sessão
-  static deleteSession(session_name) {
+  static async deleteSession(client, session_name) {
     if (this.checkSession(session_name)) {
       const key = this.getSessionKey(session_name);
-      delete this.session[key]
+      delete this.session[key];
+      while (client.pupBrowser.isConnected()) {
+        console.log("Aguardando o fechamento do Browser...");
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+      this.removeProfileBySessionName(client, session_name);
       return true
     }
     return false
@@ -119,7 +124,7 @@ class Sessions {
   static loadClients() {
     try {
       const serializedClients = JSON.parse(fs.readFileSync('clients.json', 'utf-8'));
-      return serializedClients.map(({ session_name, session }) => ({
+      return serializedClients.map(({session_name, session}) => ({
         session_name,
         session,
       }));
@@ -137,6 +142,27 @@ class Sessions {
       serializedClients = [];
     }
     return serializedClients.some(clientData => clientData.session_name === session_name);
+  }
+
+  static removeProfileBySessionName(client, session_name) {
+    const existingData = fs.readFileSync('clients.json', 'utf-8');
+    let userDataDir = client.options.authStrategy.dataPath;
+    let serializedClients = JSON.parse(existingData);
+    serializedClients = serializedClients.filter(profile => profile.session_name !== session_name);
+    fs.writeFileSync('clients.json', JSON.stringify(serializedClients, null, 2));
+    console.log(`O Browser está fechado ?: ${!client.pupBrowser.isConnected() ? "SIM" : "NÃO"}`);
+    if (fs.existsSync(userDataDir)) {
+      console.log(`Excluindo diretório do perfil: ${userDataDir}`);
+      fs.rm(userDataDir, {recursive: true}, (err) => {
+        if (err) {
+          console.error(`Erro ao excluir diretório: ${err.message}`);
+        } else {
+          console.log(`Diretório excluído com sucesso: ${userDataDir}`);
+        }
+      });
+    } else {
+      console.log(`O diretório do perfil não existe: ${userDataDir}`);
+    }
   }
 }
 

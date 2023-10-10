@@ -75,10 +75,10 @@ export NVM_DIR="$HOME/.nvm"
 
 EOF
 
+ssh -vT git@github.com
+
 su - "$username" -c "bash -l -c 'export node_version=\"$node_version\" && echo USUÁRIO: \$USER && echo PATH: \$PWD && echo NODE_VERSION: \$node_version && source ~/.bashrc'"
 su - "$username" -c "bash -l -c 'source ~/.nvm/nvm.sh && export PATH=\"\$PATH:/usr/bin:/bin:/usr/local/bin\" && source ~/.bashrc && export node_version=\"$node_version\" && nvm install \"\$node_version\"'"
-# su - "$username" -c 'bash -l -c "source ~/.nvm/nvm.sh && nvm install $node_version"'
-# su - "$username" -c "bash -l -c 'source ~/.nvm/nvm.sh && echo \"$(node -v | sed \"s/v//\")\" > ~/WhatsServer/.nvmrc'"
 su - "$username" -c "bash -l -c 'source ~/.nvm/nvm.sh && echo \$(node -v | sed \"s/v//\") > ~/WhatsServer/.nvmrc'"
 su - "$username" -c 'bash -l -c "source ~/.nvm/nvm.sh && nvm install-latest_npm"'
 su - "$username" -c 'bash -l -c "source ~/.nvm/nvm.sh && nvm use node"'
@@ -94,7 +94,6 @@ After=network.target
 User=$username
 Group=$username
 WorkingDirectory=/home/whatsserver/WhatsServer
-# ExecStart=/bin/bash -lc \'source ~/.nvm/nvm.sh && nvm use $(cat /home/whatsserver/WhatsServer/.nvmrc) && node app.js\'
 ExecStart=/bin/bash -c 'source ~/.nvm/nvm.sh && nvm use $(cat /home/whatsserver/WhatsServer/.nvmrc) && node app.js'
 
 [Install]

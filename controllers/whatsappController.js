@@ -50,7 +50,8 @@ class WhatsappWebJS {
               '--ignore-ssl-errors',
               '--ignore-certificate-errors-spki-list',
               '--disable-features=LeakyPeeker',
-              '--disable-setuid-sandbox'
+              '--disable-setuid-sandbox',
+              '--user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3312.0 Safari/537.36"'
             ],
           },
         });
@@ -88,11 +89,14 @@ class WhatsappWebJS {
           req.io.emit('message', 'Auth failure, restarting session...');
         });
 
-        client.on('disconnected', (reason) => {
+        client.on('disconnected', async (reason) => {
           console.log('Whatsapp is disconnected!');
           req.io.emit('message', 'WhatsApp is disconnected!');
-          client.destroy();
-          client.initialize();
+          await client.destroy();
+          //await client.logout();
+          await Sessions.deleteSession(client, session);
+          //await client.pupBrowser.close();
+          //client.initialize();
         });
 
         client.on('change_state', (reason) => {

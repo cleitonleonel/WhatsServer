@@ -6,7 +6,7 @@ REQUEST HB_CODEPAGE_PTISO, HB_CODEPAGE_UTF8EX
 
 PROCEDURE Main()
    Local cUrlBase := "http://0.0.0.0:3333/api/v1/"
-   Local cSession := Space( 15 )
+   Local cSession := Space( 30 )
    Local cNumber := Space( 15 )
    Local cText := Space( 50 )
    Local cCaption := Space ( 50 )
@@ -24,9 +24,17 @@ PROCEDURE Main()
    cPayload := hb_jsonEncode( { "session" => rtrim( cSession ) } )
    cResult := CheckSession( cUrlBase + "check", cPayload )
    oResult := hb_jsonDecode( cResult )
+   //IF ! (oResult["response"] == .T. .and. oResult["is_active"]) == .T.
    IF ! oResult["response"] == .T.
+      ? oResult["response"]
+      ? oResult
       alert( "NENHUMA SESSÃO ENCONTRADA PARA: " + cSession )
       Return
+   ELSEIF (oResult["response"] == .T.) .and. (oResult["is_active"] == .F.)
+      ? oResult["response"]
+      ? oResult["is_active"]
+      cResult := CheckSession( cUrlBase + "start", cPayload )
+      oResult := hb_jsonDecode( cResult )
    ENDIF
 
    IF nChoice == 1
@@ -78,7 +86,7 @@ FUNCTION CheckSession(cLink, cPayload)
       curl_easy_reset( curl )
       curl_easy_setopt( curl, HB_CURLOPT_USERAGENT, 'Mozilla/5.0 (MSIE; Windows 10)' )
       curl_easy_setopt( curl, HB_CURLOPT_CONNECTTIMEOUT, 0 )
-      curl_easy_setopt( curl, HB_CURLOPT_TIMEOUT, 5 )
+      curl_easy_setopt( curl, HB_CURLOPT_TIMEOUT, 30 )
       curl_easy_setopt( curl, HB_CURLOPT_HTTPHEADER, {"Content-Type: application/json"} )
       curl_easy_setopt( curl, HB_CURLOPT_POST, .T. )
       curl_easy_setopt( curl, HB_CURLOPT_POSTFIELDS, cPayload )

@@ -32,6 +32,7 @@ router.get('/api/v1/sendtext', controllers.getSendText);
 router.post('/api/v1/start', controllers.startSession);
 
 router.post('/api/v1/close', controllers.closeSession);
+router.post('/api/v1/logout', controllers.logoutSession);
 
 router.post('/api/v1/check', controllers.checkExists);
 

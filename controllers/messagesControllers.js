@@ -81,6 +81,23 @@ module.exports = {
     }
   },
 
+  logoutSession: async  (req, res) => {
+    let {session} = req.body.session;
+    let data = Sessions.getSession(session);
+    try {
+      await data.client.logout();
+      res.status(200).json({
+        status: true,
+        message: "Sessão Fechada com sucesso"
+      });
+    } catch (error) {
+      res.status(400).json({
+        status: false,
+        message: "Error ao fechar sessão", error
+      });
+    }
+  },
+
   getQrcode: async (req, res) => {
     const {session} = req.body;
     let data = Sessions.getSession(session);
