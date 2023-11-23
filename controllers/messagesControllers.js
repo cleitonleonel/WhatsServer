@@ -26,8 +26,8 @@ module.exports = {
       if (sessionData.status === 'QRCODE' || sessionData.status === 'READY') {
           await init(session);
       } else if (sessionData) {
-        return res.status(400).json({
-          result: 400,
+        return res.status(200).json({
+          result: 200,
           status: "FAIL",
           reason: "There is already a session with that name",
         });

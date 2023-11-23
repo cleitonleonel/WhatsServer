@@ -17,7 +17,7 @@ class WhatsappWebJS {
             useHere = true;
           }
         }
-        console.log(`****** STARTING SESSION ${session} ******`)
+        console.log(`****** STARTING SESSION ${session} ******`);
         client = new Client({
           restartOnAuthFail: true,
           takeoverOnConflict: useHere,
@@ -69,7 +69,7 @@ class WhatsappWebJS {
             Sessions.addInfoSession(session, {
               qrCode: url,
               status: 'QRCODE'
-            })
+            });
             req.io.emit('qrCode', {
               data: url,
               session
@@ -114,7 +114,7 @@ class WhatsappWebJS {
           req.io.emit('message', 'WhatsApp is authenticated!');
           Sessions.addInfoSession(session, {
             status: 'CONNECTED'
-          })
+          });
           Sessions.saveClient(client, session);
           resolve(session);
         });
@@ -125,10 +125,10 @@ class WhatsappWebJS {
         });
 
       } catch (error) {
-        reject(error)
-        console.log(error)
+        reject(error);
+        console.log(error);
       }
-    })
+    });
   }
 }
 
