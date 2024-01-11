@@ -27,7 +27,7 @@ router.get('/', controllers.getIndex);
 router.get('/api/v1/qrcode', controllers.getQrcode);
 router.get('/api/v1/clients', controllers.getClients);
 
-router.get('/api/v1/sendtext', controllers.getSendText);
+router.get('/api/v1/sendtext', controllers.sendMessage);
 
 router.post('/api/v1/start', controllers.startSession);
 
@@ -36,7 +36,7 @@ router.post('/api/v1/logout', controllers.logoutSession);
 
 router.post('/api/v1/check', controllers.checkExists);
 
-router.post('/api/v1/sendtext', validators.validateParams, controllers.postSendText);
+router.post('/api/v1/sendtext', validators.validateParams, controllers.sendText);
 router.post('/api/v1/sendfile', validators.validateParams, controllers.sendFile);
 router.post('/api/v1/upload', upload.any(), controllers.uploadFile);
 router.post('/api/v1/sendimageurl', validators.validateParams, controllers.sendImageUrl);

@@ -74,13 +74,3 @@ io.on('connection', socket => {
 server.listen(PORT, HOST, () => {
   console.log(`Servidor iniciado em http://${HOST}:${PORT}`);
 });
-
-//Closing correcily using CTRL+C
-process.on('SIGINT', async () => {
-  console.log('(SIGINT) Shutting down...');
-  if (app.client) {
-    await app.client.destroy();
-    console.log('client destroyed');
-  }
-  process.exit(0);
-});

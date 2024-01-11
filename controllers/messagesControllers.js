@@ -26,9 +26,10 @@ module.exports = {
       if (sessionData.status === 'QRCODE' || sessionData.status === 'READY') {
           await init(session);
       } else if (sessionData) {
+        req.io.emit('whatsapp-status', 'WhatsApp is authenticated!');
         return res.status(200).json({
           result: 200,
-          status: "FAIL",
+          status: "ALREADY",
           reason: "There is already a session with that name",
         });
       }
@@ -106,7 +107,7 @@ module.exports = {
         success: false,
         "result": 401,
         "messages": "Não autorizado, verifique se o nome da sessão esta correto"
-      })
+      });
     } else {
       try {
         let img = Buffer.from(data.qrCode.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64');
@@ -144,7 +145,7 @@ module.exports = {
     }
   },
 
-  getSendText: async (req, res) => {
+  sendMessage: async (req, res) => {
     const {number, text, session} = req.query;
     const data = Sessions.getSession(session);
     const formattedNumber = formatNumber(number);
@@ -168,7 +169,7 @@ module.exports = {
 
   },
 
-  postSendText: async (req, res) => {
+  sendText: async (req, res) => {
     const {number, text, session} = req.body;
     const data = Sessions.getSession(session);
     const formattedNumber = formatNumber(number);

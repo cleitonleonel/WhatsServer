@@ -21,6 +21,7 @@ class WhatsappWebJS {
         client = new Client({
           restartOnAuthFail: true,
           takeoverOnConflict: useHere,
+          webVersion: '2.2353.59',
           authStrategy: new LocalAuth({
             dataPath: `${PROFILES}/${session}`
           }),
@@ -101,6 +102,7 @@ class WhatsappWebJS {
 
         client.on('change_state', (reason) => {
           console.log('Client was change state', reason);
+          // client.resetState();
         });
 
         client.on('change_battery', (batteryInfo) => {
@@ -131,5 +133,18 @@ class WhatsappWebJS {
     });
   }
 }
+
+//Closing correcily using CTRL+C
+process.on('SIGINT', async () => {
+  console.log('(SIGINT) Shutting down...');
+  let sessions = Sessions.getAll();
+  for (let i=0; i < sessions.length; i++) {
+    if (sessions[i].client) {
+      await sessions[i].client.destroy();
+      console.log(`client ${sessions[i].session} destroyed`);
+    }
+  }
+  process.exit(0);
+});
 
 module.exports = WhatsappWebJS;

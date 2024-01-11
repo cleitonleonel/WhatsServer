@@ -1,3 +1,7 @@
+# Obtendo todos as sessões
+curl "http://localhost:3333/api/v1/clients" \
+    -H "User-Agent: Mozilla/5.0 (MSIE; Windows 10)"
+
 # Verificando se a sessão existe
 curl -X POST "http://localhost:3333/api/v1/check" \
     -H "User-Agent: Mozilla/5.0 (MSIE; Windows 10)" \

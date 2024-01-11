@@ -1,43 +1,45 @@
-Notify = function(text, callback, close_callback, style) {
+/* jshint esversion: 11 */
 
-	var time = '10000';
-	var $container = $('#notifications');
-	var icon = '<i class="fa fa-info-circle "></i>';
+Notify = function (text, callback, close_callback, style) {
 
-	if (typeof style == 'undefined' ) style = 'warning'
+  var time = '10000';
+  var $container = $('#notifications');
+  var icon = '<i class="fa fa-info-circle "></i>';
 
-	var html = $('<div class="alert alert-' + style + '  hide">' + icon +  " " + text + '</div>');
+  if (typeof style == 'undefined') style = 'warning';
 
-	$('<a>',{
-		text: '×',
-		class: 'button close',
-		style: 'padding-left: 10px;',
-		href: '#',
-		click: function(e){
-			e.preventDefault()
-			close_callback && close_callback()
-			remove_notice()
-		}
-	}).prependTo(html)
+  var html = $('<div class="alert alert-' + style + '  hide">' + icon + " " + text + '</div>');
 
-	$container.prepend(html)
-	html.removeClass('hide').hide().fadeIn('slow')
+  $('<a>', {
+    text: 'x',
+    class: 'button close',
+    style: 'padding-left: 10px;',
+    href: '#',
+    click: function (e) {
+      e.preventDefault();
+      close_callback && close_callback();
+      remove_notice();
+    }
+  }).prependTo(html);
 
-	function remove_notice() {
-		html.stop().fadeOut('slow').remove()
-	}
+  $container.prepend(html);
+  html.removeClass('hide').hide().fadeIn('slow');
 
-	var timer =  setInterval(remove_notice, time);
+  function remove_notice() {
+    html.stop().fadeOut('slow').remove();
+  }
 
-	$(html).hover(function(){
-		clearInterval(timer);
-	}, function(){
-		timer = setInterval(remove_notice, time);
-	});
+  var timer = setInterval(remove_notice, time);
 
-	html.on('click', function () {
-		clearInterval(timer)
-		callback && callback()
-		remove_notice()
-	});
-}
+  $(html).hover(function () {
+    clearInterval(timer);
+  }, function () {
+    timer = setInterval(remove_notice, time);
+  });
+
+  html.on('click', function () {
+    clearInterval(timer);
+    callback && callback();
+    remove_notice();
+  });
+};
