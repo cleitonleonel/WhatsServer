@@ -21,7 +21,7 @@ class WhatsappWebJS {
         client = new Client({
           restartOnAuthFail: true,
           takeoverOnConflict: useHere,
-          webVersion: '2.2353.59',
+          webVersion: '2.2404.1',
           authStrategy: new LocalAuth({
             dataPath: `${PROFILES}/${session}`
           }),
