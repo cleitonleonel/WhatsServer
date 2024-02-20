@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 sudo apt update -y
 sudo apt upgrade -y
 sudo apt install -y curl jq \
@@ -55,7 +58,7 @@ echo "Dando permissões ao usuário $username"
 sudo chown "$username:$username" -R "/home/$username"
 sudo chmod -R 755 "/home/$username"
 
-cd "/home/$username"
+cd "/home/$username" || exit
 echo "$PWD"
 
 su "$username" << EOF
