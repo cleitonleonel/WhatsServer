@@ -19,13 +19,11 @@ module.exports = {
     const sessionExists = Sessions.checkSession(session);
     if (!sessionExists) {
       await init(session);
-    }
-
-    if (sessionExists) {
+    } else if (sessionExists) {
       const sessionData = Sessions.getSession(session);
       if (sessionData.status === 'QRCODE' || sessionData.status === 'READY') {
           await init(session);
-      } else if (sessionData) {
+      } else if (sessionData.status === 'CONNECTED') {
         req.io.emit('whatsapp-status', 'WhatsApp is authenticated!');
         return res.status(200).json({
           result: 200,

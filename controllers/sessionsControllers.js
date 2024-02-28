@@ -8,7 +8,7 @@ class Sessions {
   static checkPath(path) {
     urlExists(path, (error, exists) => {
       return !!exists;
-    })
+    });
   }
 
   // checar ou adiciona um usuario na sessão
@@ -17,11 +17,11 @@ class Sessions {
     if (!checkFilter.length) {
       add = {
         session: session_name,
-      }
-      this.session.push(add)
-      return true
+      };
+      this.session.push(add);
+      return true;
     }
-    return false
+    return false;
   }
 
   // checar se existe o usuario na sessão
@@ -35,11 +35,11 @@ class Sessions {
     if (this.checkSession(session_name)) {
       for (const i in this.session) {
         if (this.session[i].session === session_name) {
-          return i
+          return i;
         }
       }
     }
-    return false
+    return false;
   }
 
   // adicionar informações a sessão
@@ -48,11 +48,11 @@ class Sessions {
       for (const i in this.session) {
         if (this.session[i].session === session_name) {
           const new_object = Object.assign(this.session[i], extend);
-          return true
+          return true;
         }
       }
     }
-    return false
+    return false;
   }
 
   // Remove object na sessão
@@ -60,12 +60,12 @@ class Sessions {
     if (this.checkSession(session_name)) {
       for (const i in this.session) {
         if (this.session[i].session === session_name) {
-          delete this.session[i][key]
-          return true
+          delete this.session[i][key];
+          return true;
         }
       }
     }
-    return false
+    return false;
   }
 
   // deletar sessão
@@ -78,23 +78,23 @@ class Sessions {
         await new Promise(resolve => setTimeout(resolve, 2000));
       }
       this.removeProfileBySessionName(client, session_name);
-      return true
+      return true;
     }
-    return false
+    return false;
   }
 
   // retornar sessão
   static getSession(session_name) {
     if (this.checkSession(session_name)) {
       const key = this.getSessionKey(session_name);
-      return this.session[key]
+      return this.session[key];
     }
-    return false
+    return false;
   }
 
   // retornar todas
   static getAll() {
-    return this.session
+    return this.session;
   }
 
   // checa o client
