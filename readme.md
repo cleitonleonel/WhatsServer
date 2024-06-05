@@ -3,7 +3,7 @@
 <img src="https://github.com/cleitonleonel/WhatsServer/blob/master/whats.png?raw=true" alt="whatsserver" width="200"/>
 
 Server básico para pequenos projetos de automação do whatsapp usando [whatsapp-web.js](https://wwebjs.dev/),
-para fins educativos.
+para fins didáticos.
 
 ### Instalação e uso
 
